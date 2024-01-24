@@ -1,8 +1,11 @@
 from pymongo import MongoClient
 import boto3
 import time
+import os
 from datetime import datetime
 from forex_python.converter import CurrencyRates
+from dotenv import load_dotenv
+load_dotenv()
 
 # MongoDB 클라이언트 생성
 mongo_client = MongoClient("localhost", 27017)
@@ -13,8 +16,11 @@ db = mongo_client["omnivore"]
 # "store" 컬렉션 선택
 collection = db["store"]
 
+aws_access_key_id = os.environ.get('aws_access_key_id')
+aws_secret_access_key = os.environ.get('aws_secret_access_key')
+
 # Amazon Translate 클라이언트 생성
-translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id='AKIA4MXFBHANQT627WML', aws_secret_access_key='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')
+translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
 
 def get_store_info(store_name):
     # MongoDB에서 가게 이름에 해당하는 데이터 조회
