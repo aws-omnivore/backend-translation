@@ -1,11 +1,15 @@
 from pymongo import MongoClient
 import boto3
-import time
 import os
+from flask import Flask, request
+import base64
+import json
 from datetime import datetime
 from forex_python.converter import CurrencyRates
 from dotenv import load_dotenv
 load_dotenv()
+
+app = Flask(__name__)
 
 # MongoDB 클라이언트 생성
 mongo_client = MongoClient("localhost", 27017)
@@ -29,7 +33,7 @@ def get_store_info(store_name):
 
 nation_dic = {'eng': 'USD', 'jp': 'JPY'}
 # 환율 계산
-def ex_list(Lang=''):
+def ex_list(price_list, Lang='en'):
     for i in range(len(price_list)):
         c = CurrencyRates()
         Price=price_list[i]
@@ -54,12 +58,15 @@ def replace_price_values(input_dict, new_values):
     return updated_dict
 
 
-def log_function_execution_time(func):
-    def wrapper(*args, **kwargs):
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time=time.time()
-        #execution_time = end_time - start_time #함수가 실행되는 데 걸린 시간
+def log_function_execution_time(func):  # func : api_test, 데코레이터로 log_function_execution_time 함수를 실행하였으므로 매개변수로 api_test를 가져온다.
+    def wrapper():
+        headers = request.headers
+        body = request.get_json() # body 꺼내오는 함수
+        # jwt decode
+        decoded_dict = token_decode(headers)
+
+        result = func(body) # api_test 함수 실행
+
         #현재 년월일시분초를 가져와서 로그에 추가
         current_time = datetime.now()
         
@@ -68,16 +75,32 @@ def log_function_execution_time(func):
 
         #로그를 mongoDB에 저장
         log_entry = {
-            "function_name": func.__name__,
-            #"execution_time": execution_time,
-            "timestamp": current_time
+            "timestamp": current_time,
+            "store_name": body["name"], # request body
+            "translate_name": result[0]["name"], # response
+            "email" : decoded_dict['email'] # auth email
         }
         collection.insert_one(log_entry)
+     
         return result
     
     return wrapper
-        
-@log_function_execution_time
+
+
+def token_decode(headers):
+    value = headers.get("Authorization")
+    v = value.split(" ")[1]
+
+    # JWT payload 추출
+    payload_encoded = v.split('.')[1]
+
+    # Base64 디코딩
+    payload_bytes = base64.urlsafe_b64decode(payload_encoded + '==')
+    decoded_payload = payload_bytes.decode('utf-8')
+    payload_dict = json.loads(decoded_payload)
+
+    return payload_dict
+
 def translate_store_info(store_info, target_language='en'): # target_language는 유저정보 받아오는 data에 따라 바뀔 것
     if store_info:
         # 가게 정보에서 번역 대상 텍스트 추출 (이 예제에서는 'name' 필드를 번역합니다)
@@ -131,18 +154,12 @@ def translate_store_info(store_info, target_language='en'): # target_language는
     else:
         return None
 
-# 가게 이름
-store_name = "한솥"
-
-# 가게 정보 가져오기
-store_info = get_store_info(store_name)
-
-if store_info:
-    # 번역된 가게 이름 출력
-    test = 'en'
-    translated_name = translate_store_info(store_info, test)
+@app.route('/test', methods=['POST'])
+@log_function_execution_time
+def api_test(body):
+    translated_name = translate_store_info(body, target_language='en')
     price_list = list(translated_name.get("price",{}).values())
-    updated_data = replace_price_values(translated_name, ex_list(test))
-    print(f"{updated_data}")
-else:
-    print(f"{store_name}에 해당하는 가게 정보가 없습니다.")
+    updated_data = replace_price_values(translated_name, ex_list(price_list))
+    return updated_data, 200
+
+app.run(host="localhost",port=5001)
