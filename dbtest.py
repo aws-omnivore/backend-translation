@@ -7,28 +7,16 @@ client=MongoClient(host='localhost',port=27017)
 
 db=client['test']
 collection = db['menu']
-ins={'name':'kimbab',
-     'price':3000}
+ins={'name':'kimbab','price':3000}
 nation_dic = {'eng': 'USD', 'jp': 'JPY'}
 #Lang='eng' #언어 불러올 때 인자로 넣어버리기
 #collection.insert_one(ins)
 
-result = collection.find_one({"name": "김밥천국"})
-price_list = list(result.get("price",{}).values())
-print(price_list)
-
-'''
 result = collection.find({}, {'_id': 0, 'price': 1})
 for document in result:
     Price=(document['price'])
-    #여기서 프라이스는 그냥 키값쌍 하나임 그니까 
-'''
 
 
-
-
-
-'''
 def exchange(Lang=''):
     c = CurrencyRates()
 
@@ -43,7 +31,7 @@ def exchange(Lang=''):
 
 e_result= exchange('jp') #여기 이 부분 나중에 언어 선택하는 그거로 바꿔오기
 print(e_result)
-'''
+
 
 
 
