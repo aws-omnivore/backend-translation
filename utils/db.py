@@ -1,15 +1,15 @@
 from pymongo import MongoClient
+from setting import DB_HOST, STORE_DB, STORE_COLLECTION, LOG_DB, LOG_COLLECTION
 
 # MongoDB 클라이언트 생성
-mongo_client = MongoClient("localhost", 27017)
-
+mongo_client = MongoClient(DB_HOST, 27017)
 # "omnivore" 데이터베이스 선택
-omnivore_db = mongo_client["omnivore"]
+omnivore_db = mongo_client[STORE_DB]
 # "store" 컬렉션 선택
-store_collection = omnivore_db["store"]
+store_collection = omnivore_db[STORE_COLLECTION]
 
-log_db=mongo_client['log']
-time_collection = log_db['time']
+log_db=mongo_client[LOG_DB]
+time_collection = log_db[LOG_COLLECTION]
 
 
 def get_store_info(store_name):
