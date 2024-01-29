@@ -1,14 +1,9 @@
 import boto3
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
-aws_access_key_id = os.environ.get('aws_access_key_id')
-aws_secret_access_key = os.environ.get('aws_secret_access_key')
+from setting import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 # Amazon Translate 클라이언트 생성
-translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id = aws_access_key_id, aws_secret_access_key = aws_secret_access_key)
-
+translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 
 # 매개변수로 넘어온 텍스트를 반환한다.
 def translate_text(text, target_language="en"):
