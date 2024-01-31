@@ -1,6 +1,6 @@
 import boto3
-
 from setting import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
 
 # Amazon Translate 클라이언트 생성
 translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
