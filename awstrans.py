@@ -1,6 +1,6 @@
 from flask import Flask
 from setting import API_HOST
-from utils.dynamodb import get_restaurant_info
+from utils.dynamodb import find_restaurant
 from utils.logger import log_function_execution_time
 from utils.db import get_store_info
 from utils.exchange_money import exchange_str_price
@@ -67,8 +67,11 @@ def translate_store_info(restaurant_info: dict, target_language='en'): # target_
 @app.route('/api/v1/record', methods=['POST'])
 @log_function_execution_time
 def api_test(restaurant_name: str):
-    restaurant_info = get_restaurant_info(restaurant_name)
+    restaurant_info = find_restaurant(restaurant_name)
     translated_store = translate_store_info(restaurant_info, target_language='en') # target language는 프론트에서 header에 담겨져 온다
+
+    if not translated_store:
+        return "No Content", 204
     return translated_store, 200
 
 app.run(host=API_HOST, port=5001)

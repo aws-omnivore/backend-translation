@@ -2,7 +2,6 @@ from flask import request
 from datetime import datetime
 import boto3
 import uuid
-from utils.db import time_collection
 from utils.auth import token_decode
 from setting import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
@@ -32,9 +31,11 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
             return uuid.uuid4()
         
         new_uuid = str(generate_uuid())
-
-        restaurant_id_dict = response.get("restaurant_id", {})
-        restaurant_id = restaurant_id_dict.get("S", "")
+        
+        restaurant_id = ""
+        if response and type(response) == dict:
+            restaurant_id_dict = response.get("id", {})
+            restaurant_id = restaurant_id_dict.get("S", "")
 
         #로그를 mongoDB에 저장
         log_entry = {
