@@ -1,6 +1,7 @@
+
+import json
 import boto3
-import json
-import json
+from boto3.dynamodb.conditions import Key
 
 secret_name = "secret/aws"
 region_name = "ap-northeast-2"
@@ -11,21 +12,28 @@ get_secret_value_response = client.get_secret_value(SecretId=secret_name)
 secret = json.loads(get_secret_value_response['SecretString'])
 
 mongodb_sw = False
-dynamodb = boto3.client('dynamodb', region_name='ap-northeast-2', aws_access_key_id = secret["aws.accessKey"], aws_secret_access_key = secret["aws.secretKey"])
+dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2', aws_access_key_id = secret["aws.accessKey"], aws_secret_access_key = secret["aws.secretKey"])
 
-table_name = "restaurant"    # 나중에 table_name 바꾸면 수정해주기.
-def get_restaurants():
-    # 테이블 스캔하여 모든 아이템 가져오기
-    response = dynamodb.scan(TableName=table_name)
-    # items = response['Items'] if mongodb_sw else response['Items'][0]
-    return response['Items']
+table_name = "restaurant"  
 
-def find_restaurant(restaurant_name: str) -> dict or None:
-    if not mongodb_sw:
-        items = get_restaurants()
-        for item in items:
-            if type(item) == dict and "name" in item:
-                if type(item["name"]) == dict and item["name"].get("S", "") == restaurant_name:
-                    return item
+def find_restaurant_id(id: str) -> dict or None:
+    table = dynamodb.Table(table_name)
+    response = table.query(
+        KeyConditionExpression=Key('id').eq(id)
+    )
+    items = response['Items']
+    if items:
+        return items[0]
+    return None
+
+def find_restaurant(name: str) -> dict or None:
+    table = dynamodb.Table(table_name)
+    response = table.query(
+        IndexName = "name-index",
+        KeyConditionExpression=Key('name').eq(name)
+    )
+    items = response['Items']
+    if items:
+        return items[0]
     return None
     

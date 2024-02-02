@@ -35,7 +35,7 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
         restaurant_id = ""
         if response and type(response) == dict:
             restaurant_id_dict = response.get("id", {})
-            restaurant_id = restaurant_id_dict.get("S", "")
+            restaurant_id = restaurant_id_dict#.get("S", "")
 
         #로그를 mongoDB에 저장
         log_entry = {

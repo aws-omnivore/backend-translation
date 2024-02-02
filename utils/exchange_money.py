@@ -3,16 +3,17 @@ from forex_python.converter import CurrencyRates
 
 NATION_DICT = {'eng': 'USD', 'jp': 'JPY'}
 
-def exchange(price, lang="en"):
+def exchange(price, target_language):
     c = CurrencyRates()
-    exchange_rate_usd_to_krw = c.get_rate(NATION_DICT.get(lang),'KRW')
-    return round(price / exchange_rate_usd_to_krw, 2)
+    exchange_rate_usd_to_krw = c.get_rate(NATION_DICT.get(target_language),'KRW')
+    return round(float(price) / exchange_rate_usd_to_krw, 2)
 
 def exchange_str_price(str_price):
-    price = extract_numbers(str_price) if type(str_price) == str else str_price
-    if len(price) > 0:
-        return exchange(int(price))
-    return price
+    price = str_price
+    #extract_numbers(str_price) if type(str_price) == str else str_price
+    #if len(price) > 0:
+    return exchange(int(price))
+    #return price
 
 def extract_numbers(text):
     # 정규식을 사용하여 숫자만 추출
