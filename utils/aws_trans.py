@@ -2,6 +2,8 @@ import boto3
 import sys
 import json
 
+from utils.logger import logged
+
 secret_name = "secret/aws"
 region_name = "ap-northeast-2"
 # Create a Secrets Manager client
@@ -23,6 +25,7 @@ secret = json.loads(get_secret_value_response['SecretString'])
 translate_client = boto3.client('translate', region_name='ap-northeast-2', aws_access_key_id = secret["aws.accessKey"], aws_secret_access_key = secret["aws.secretKey"])
 
 # 매개변수로 넘어온 텍스트를 반환한다.
+@logged
 def translate_text(text, target_language):
     translate_response = translate_client.translate_text(
         Text= text, 

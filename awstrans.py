@@ -2,7 +2,7 @@ from flask import Flask,request
 from flask_cors import CORS
 from setting import API_HOST
 from utils.dynamodb import find_restaurant, find_by_restaurant_id
-from utils.logger import log_function_execution_time
+from utils.logger import log_function_execution_time, logged
 from utils.exchange_money import exchange
 from utils.aws_trans import translate_text
 
@@ -12,6 +12,7 @@ CORS(app)
 
 mongodb_sw = False
 
+@logged
 def translate_store_info(restaurant_info: dict, target_language): 
     translated_store = restaurant_info
 

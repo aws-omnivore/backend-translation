@@ -1,7 +1,10 @@
 
 import json
+import logging
 import boto3
 from boto3.dynamodb.conditions import Key
+
+from utils.logger import logged
 
 secret_name = "secret/aws"
 region_name = "ap-northeast-2"
@@ -16,6 +19,7 @@ dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2', aws_access_k
 
 table_name = "restaurant"  
 
+@logged
 def find_by_restaurant_id(id: str) -> dict or None:
     table = dynamodb.Table(table_name)
     response = table.get_item(Key={
@@ -23,9 +27,12 @@ def find_by_restaurant_id(id: str) -> dict or None:
     })
     item = response['Item']
     if item:
+        logging.info({"request": id, "response": item})
         return item
+    logging.info({"request": id, "response": None})
     return None
 
+@logged
 def find_restaurant(name: str) -> dict or None:
     table = dynamodb.Table(table_name)
     response = table.query(
