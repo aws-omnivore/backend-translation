@@ -16,20 +16,20 @@ dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2', aws_access_k
 
 table_name = "restaurant"  
 
-def find_restaurant_id(id: str) -> dict or None:
+def find_by_restaurant_id(id: str) -> dict or None:
     table = dynamodb.Table(table_name)
-    response = table.query(
-        KeyConditionExpression=Key('id').eq(id)
-    )
-    items = response['Items']
-    if items:
-        return items[0]
+    response = table.get_item(Key={
+        'id': id
+    })
+    item = response['Item']
+    if item:
+        return item
     return None
 
 def find_restaurant(name: str) -> dict or None:
     table = dynamodb.Table(table_name)
     response = table.query(
-        IndexName = "name-index",
+        IndexName = 'name-index',
         KeyConditionExpression=Key('name').eq(name)
     )
     items = response['Items']
