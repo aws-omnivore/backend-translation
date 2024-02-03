@@ -1,9 +1,12 @@
 from flask import request
+import logging
 from datetime import datetime
 import boto3
 import uuid
 from utils.auth import token_decode
 from setting import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+
+logging.basicConfig(level='INFO')
 
 dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2', aws_access_key_id = AWS_ACCESS_KEY_ID, aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
 
@@ -35,7 +38,7 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
         restaurant_id = ""
         if response and type(response) == dict:
             restaurant_id_dict = response.get("id", {})
-            restaurant_id = restaurant_id_dict.get("S", "")
+            restaurant_id = restaurant_id_dict#.get("S", "")
 
         #로그를 mongoDB에 저장
         log_entry = {
@@ -50,4 +53,12 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
      
         return response, status
     
+    return wrapper
+
+def logged(func, *args, **kwargs):
+    logger = logging.getLogger()
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        logger.info("calling {} with args {} and kwargs {}, result is {}".format(func.__name__, args, kwargs, result))
+        return result
     return wrapper
