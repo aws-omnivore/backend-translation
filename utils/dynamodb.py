@@ -14,7 +14,7 @@ client = session.client(service_name='secretsmanager',region_name=region_name)
 get_secret_value_response = client.get_secret_value(SecretId=secret_name)
 secret = json.loads(get_secret_value_response['SecretString'])
 
-mongodb_sw = False
+mongodb_sw = False  
 dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-2', aws_access_key_id = secret["aws.accessKey"], aws_secret_access_key = secret["aws.secretKey"])
 
 table_name = "restaurant"  
@@ -27,12 +27,10 @@ def find_by_restaurant_id(id: str) -> dict or None:
     })
     item = response['Item']
     if item:
-        logging.info({"request": id, "response": item})
         return item
-    logging.info({"request": id, "response": None})
     return None
 
-@logged
+# @logged
 def find_restaurant(name: str) -> dict or None:
     table = dynamodb.Table(table_name)
     response = table.query(
