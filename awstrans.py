@@ -64,10 +64,9 @@ def api_for_id(restaurant_id):
 @app.route('/api/v1/record', methods=['GET'])
 @log_function_execution_time
 def api_for_name(restaurant_name: str):
-    target_language = request.headers.get("Language")
+    target_language = request.headers.get("Language", "en")
     restaurant_info = find_restaurant(restaurant_name)
     translated_store = translate_store_info(restaurant_info, target_language) # target language는 프론트에서 header에 담겨져 온다
-
     if not translated_store:
         return "No Content", 204
     return translated_store, 200
