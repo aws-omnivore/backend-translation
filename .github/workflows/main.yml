@@ -41,14 +41,14 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: aws-omnivore/deployment
-        path: aws-omnivore/deployment/translate/
+        path: aws-omnivore/deployment/translate/deployment.yml
         ref: main  # branch
         token: ${{ secrets.GH_TOKEN }}
     - name: k8s manifest update
       run: |
         sed -i "s@ \
         image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:.*@ \
-        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}@g" deployment.yml
+        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}@g" translate/deployment.yml
     - name: Commit and Push
       run: |
         git config user.email ${{ env.GIT_EMAIL }}
