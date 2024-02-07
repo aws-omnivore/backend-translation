@@ -1,9 +1,15 @@
 import requests
+import time
+import json
+import os
+import sys
+import urllib.request
 
 CLIENT_ID="vdCP1nEnOBBDS9HoBBXi"
 CLIENT_SECRET="7ECb_RpZTx"
 URL="https://openapi.naver.com/v1/papago/n2mt"
 SOURCE_LANG="ko"
+
 
 def translate_with_papago(target_lang, text):
     # papago api 에 요청할 데이터 셋팅
@@ -15,9 +21,23 @@ def translate_with_papago(target_lang, text):
         "X-Naver-Client-Secret" : CLIENT_SECRET
     }
 
-    # papago api에 요청
-    response = requests.post(URL, data=data, headers=headers)
-    response_json = response.json()   # json의 dic' 형식으로 변환한다.
+    Client_ID = "vdCP1nEnOBBDS9HoBBXi"
+    Client_Secret = "7ECb_RpZTx"
 
-    return response_json["message"]["result"]
-print(translate_with_papago(target_lang="en", text="안녕"))
+    encText = urllib.parse.quote(text)
+    data = "source=ko&target=en&text=" + encText
+    url = "https://openapi.naver.com/v1/papago/n2mt"
+    request = urllib.request.Request(url)
+    request.add_header("X-Naver-Client-Id",Client_ID)
+    request.add_header("X-Naver-Client-Secret",Client_Secret)
+    
+    response = urllib.request.urlopen(request, data=data.encode("utf-8"))
+    
+    rescode = response.getcode()
+    if(rescode==200):
+        response_body = response.read()
+        response_body_str = response_body.decode('utf-8')
+        response_body = json.loads(response_body_str)
+        return response_body["message"]["result"]["translatedText"]
+    else:
+        print("Error Code:" + rescode)
