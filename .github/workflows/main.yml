@@ -6,52 +6,56 @@ on:
     - '.gitignore'
     - '.dockerignore'
 jobs:
-  Continuous_Integration:   #job 이름
-    runs-on: ubuntu-latest  #job을 실행할 환경
+  Continuous_Integration:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4 # uses=액션들. 이미 만들어진 액션을 검색해서 가져다 쓰면된다.
+    - uses: actions/checkout@v4
       with:
-        fetch-depth: 1          #가장 최근 commit한 히스토리만 가져온다.
-    - name: Configure AWS credentials #AWS 액세스키와 시크릿 액세스키를 미리 setting에서 secret에 등록해놓아야함.
+        fetch-depth: 1
+
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
+
     - name: Set Variables
-      id: set-var
       run: |
         echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
         echo "ECR_REPOSITORY=translate" >> $GITHUB_ENV
         echo "IMAGE_TAG=${{ github.run_number }}" >> $GITHUB_ENV
         echo "GIT_EMAIL=jinwoo3307@gmail.com" >> $GITHUB_ENV
         echo "GIT_NAME=hijinwoo" >> $GITHUB_ENV
+
     - name: Docker Image Build
-      id: build-image
-      run: |
-        docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+      run: docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+
     - name: Docker image Push
-      id: push-image
-      run: |
-        docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+      run: docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
     - name: Checkout Deployment Repository
       uses: actions/checkout@v4
       with:
         repository: aws-omnivore/deployment
-        ref: main  # branch
+        path: deployment  # 체크아웃한 저장소의 경로를 명확히 지정
+        ref: main
         token: ${{ secrets.GH_TOKEN }}
+
     - name: k8s manifest update
       run: |
-        sed -i "s@ \
-        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:.*@ \
-        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}@g" translate/deployment.yml
+        cd deployment/translate  # 올바른 경로로 이동
+        sed -i "s@image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:.*@image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}@g" deployment.yml
+
     - name: Commit and Push
       run: |
+        cd ../..  # git 명령을 실행하기 전에 루트 디렉토리로 이동
         git config user.email ${{ env.GIT_EMAIL }}
         git config user.name ${{ env.GIT_NAME }}
-        git add deployment.yml
+        git add deployment/translate/deployment.yml  # 올바른 경로의 파일을 추가
         git commit -m "Update image tag"
         git push origin main
