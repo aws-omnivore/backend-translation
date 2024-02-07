@@ -40,7 +40,7 @@ jobs:
     - name: Checkout Deployment Repository
       uses: actions/checkout@v4
       with:
-        repository: hijinwoo/deployment
+        repository: aws-omnivore/deployment
         path: translate
         ref: main  # branch
         token: ${{ secrets.GH_TOKEN }}
