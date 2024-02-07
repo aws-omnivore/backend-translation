@@ -55,6 +55,6 @@ jobs:
       run: |
         git config user.email ${{ env.GIT_EMAIL }}
         git config user.name ${{ env.GIT_NAME }}
-        git add deployment/translate/deployment.yml  # 올바른 경로의 파일을 추가
+        git add deployment.yml  # 올바른 경로의 파일을 추가
         git commit -m "Update image tag"
         git push origin main
