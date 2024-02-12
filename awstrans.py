@@ -74,4 +74,4 @@ def api_for_name(restaurant_name: str):
 
 app.run(host=API_HOST, port=5001)
 
-# test
+# argocd test

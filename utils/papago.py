@@ -1,8 +1,4 @@
-import requests
-import time
 import json
-import os
-import sys
 import urllib.request
 
 CLIENT_ID="vdCP1nEnOBBDS9HoBBXi"
