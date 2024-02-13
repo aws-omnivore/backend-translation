@@ -10,7 +10,6 @@ app = Flask(__name__)
 
 CORS(app)
 
-mongodb_sw = False
 
 @logged
 def translate_store_info(restaurant_info: dict, target_language): 
@@ -72,6 +71,6 @@ def api_for_name(restaurant_name: str):
     return translated_store, 200
 
 
-app.run(host=API_HOST, port=5001)
+app.run(host=API_HOST, port=5002)
 
 # argocd test
