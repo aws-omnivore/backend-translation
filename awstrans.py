@@ -71,6 +71,6 @@ def api_for_name(restaurant_name: str):
     return translated_store, 200
 
 
-app.run(host=API_HOST, port=5002)
+app.run(host=API_HOST, port=8080)
 
 # argocd test
