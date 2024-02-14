@@ -60,11 +60,10 @@ def api_for_id(restaurant_id):
         return "No Content", 204
     return translated_store, 200
 
-@app.route('/api/v1/record', methods=['POST'])
+@app.route('/api/v1/record', methods=['GET'])
 @log_function_execution_time
-def api_for_name():
+def api_for_name(restaurant_name: str):
     target_language = request.headers.get("Language")
-    restaurant_name = request.headers.get("name")
     restaurant_info = find_restaurant(restaurant_name)
     translated_store = translate_store_info(restaurant_info, target_language) # target language는 프론트에서 header에 담겨져 온다
     if not translated_store:
@@ -74,4 +73,3 @@ def api_for_name():
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080)
 
-# argocd test
