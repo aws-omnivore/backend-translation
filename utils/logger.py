@@ -17,15 +17,15 @@ dynamo_mongo_sw="mongodb"
 def log_function_execution_time(func):  # func : api_test, 데코레이터로 log_function_execution_time 함수를 실행하였으므로 매개변수로 api_test를 가져온다.
     def wrapper():
         headers = request.headers
-        body = request.get_json()
+        query_params = request.args
         # jwt decode
         decoded_dict = token_decode(headers)
 
 
         if dynamo_mongo_sw=="mongodb":
-            response, status = func(body("name")) # api_test 함수 실행
+            response, status = func(query_params.get("name")) # api_test 함수 실행
         elif dynamo_mongo_sw=="dynamo":
-            response, status = func(body("name")["S"]) # api_test 함수 실행
+            response, status = func(query_params.get("name")["S"]) # api_test 함수 실행
 
         #현재 년월일시분초를 가져와서 로그에 추가
         current_time = int(str(datetime.now()).replace(" ","").replace("-","").replace(":","").replace(".",""))
@@ -45,7 +45,7 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
             "id": new_uuid,
             "timestamp": current_time,
             "restaurant_id": restaurant_id,  
-            "name": body.get("name", ""), # request body       
+            "name": query_params.get("name", ""), # request body       
             # "translate_name": response["name"], # response
             "email" : decoded_dict.get('email', "") # auth email
         }
