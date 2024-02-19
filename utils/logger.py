@@ -49,8 +49,6 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
             # "translate_name": response["name"], # response
             "email" : decoded_dict.get('email', "") # auth email
         }
-        answer = table.put_item(Item=log_entry)
-     
         return response, status
     
     return wrapper
