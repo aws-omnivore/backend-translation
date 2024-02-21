@@ -51,7 +51,7 @@ def translate_store_info(restaurant_info: dict, target_language):
         translated_store['operation'] = new_operation
     return translated_store
 
-@app.route('/api/v1/record/<restaurant_id>', methods=['GET'])
+@app.route('/api/v1/translate/<restaurant_id>', methods=['GET'])
 def api_for_id(restaurant_id):
     target_language = request.headers.get("Language")
     restaurant_info_id = find_by_restaurant_id(restaurant_id)
@@ -61,7 +61,7 @@ def api_for_id(restaurant_id):
         return "No Content", 204
     return translated_store, 200
 
-@app.route('/api/v1/record', methods=['GET'])
+@app.route('/api/v1/translate', methods=['GET'])
 @log_function_execution_time
 def api_for_name(restaurant_name: str):
     target_language = request.headers.get("Language")
