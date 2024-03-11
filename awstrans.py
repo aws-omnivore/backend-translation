@@ -1,5 +1,4 @@
-from flask import Flask,request
-import jsonify
+from flask import Flask,request,jsonify
 from flask_cors import CORS
 from setting import API_HOST
 from utils.dynamodb import find_restaurant, find_by_restaurant_id
