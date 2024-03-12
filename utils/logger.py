@@ -40,13 +40,12 @@ def log_function_execution_time(func):  # func : api_test, 데코레이터로 lo
             restaurant_id_dict = response.get("id", {})
             restaurant_id = restaurant_id_dict#.get("S", "")
 
-        #로그를 mongoDB에 저장
+        #로그를 DynamoDB에 저장
         log_entry = {
             "id": new_uuid,
             "timestamp": current_time,
             "restaurant_id": restaurant_id,  
             "name": query_params.get("name", ""), # request body       
-            # "translate_name": response["name"], # response
             "email" : decoded_dict.get('email', "") # auth email
         }
         return response, status
