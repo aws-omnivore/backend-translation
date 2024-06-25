@@ -17,7 +17,8 @@
 이러한 상황을 대비해 음식점 간판만 촬영하면 음식점 정보를 얻을 수 있는 서비스를 개발하게 되었습니다.
 
 
-<img src="https://github.com/aws-omnivore/backend-translation/assets/139137529/bde721c8-9270-4c6d-9348-a7647f384725" width="400" heigh="400"/>
+<img src="https://github.com/aws-omnivore/backend-translation/assets/139137529/bde721c8-9270-4c6d-9348-a7647f384725" width="600" heigh="600"/>
+
 메인 기능을 "ONE TOUCH" 기능으로 저희 서비스의 Flow입니다. 로그인과 회원가입 이후 메인 화면에 들어오게 됩니다. 메인 화면에서는 4가지 기능의 버튼이 있습니다. 
 
 ## 기능
