@@ -18,7 +18,7 @@
 
 ## 기능
 1. 최근 기록 : "내가 전에 어떤 음식점을 봤었지??" 최근 검색한 음식점 목록을 확인 할 수 있는 기능입니다.
-<img src=https://github.com/aws-omnivore/backend-translation/assets/139137529/e5c368cd-1448-4dc8-bbee-049c570d0512" width="200" heigh="400"/>
+<img src="https://github.com/aws-omnivore/backend-translation/assets/139137529/e5c368cd-1448-4dc8-bbee-049c570d0512" width="200" heigh="400"/>
 2. 북마크 : 방문했던 음식점이 가장 기억에 남았다! 북마크 해뒀다가 바로 꺼내 볼 수 있는 북마크 기능입니다.
 ![image](https://github.com/aws-omnivore/backend-translation/assets/139137529/724b3dd7-cbf5-4255-acbd-9b96faded4e4)
 3. 주변 가게 추천 : "아무거나 좋으니 일단 주변에 어떤 맛집들이 있는지 알아보자!"를 위한 주변 가게 추천 기능입니다.
