@@ -23,3 +23,4 @@
 <img src="https://github.com/aws-omnivore/backend-translation/assets/139137529/724b3dd7-cbf5-4255-acbd-9b96faded4e4" width="200" heigh="400"/>
 3. 주변 가게 추천 : "아무거나 좋으니 일단 주변에 어떤 맛집들이 있는지 알아보자!"를 위한 주변 가게 추천 기능입니다.
 <img src="https://github.com/aws-omnivore/backend-translation/assets/139137529/69378603-6a56-418b-89dc-2bca10244253" width="200" heigh="400"/>
+
